@@ -130,24 +130,56 @@ include('../../config/dbconn.php');
           <form action="student_action.php" method="POST" enctype="multipart/form-data">
             <div class="modal-body">
               <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Current Grade</label>
+                    <span class="text-danger">*</span>
+                    <input type="text" id="edit_grade" class="form-control" pattern="[a-zA-Z'-'\s]*"
+                      readonly>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Current Strand</label>
+                    <span class="text-danger">*</span>
+                    <input type="text" id="edit_strand" class="form-control" pattern="[a-zA-Z'-'\s]*" readonly>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Current Section</label>
+                    <span class="text-danger">*</span>
+                    <input type="text" id="edit_section" class="form-control" pattern="[a-zA-Z'-'\s]*" readonly>
+                  </div>
+                </div>
+                <div class="col-sm-6"></div>
+                <h3>Edit Grade, Strand and Section</h3>
                 <div class="col-sm-6 mb-2">
                   <input type="hidden" name="edit_id" id="edit_id">
                   <div class="form-group">
                     <label>Grade</label>
                     <span class="text-danger">*</span>
-                   <select class="custom-select mb-3" name="grade" required id="edit_grade">
-                      <option selected disabled value="">Grade</option>
-                      <option>Grade 11</option>
-                      <option>Grade 12</option>
+                    <select class="custom-select mb-3" id="gradeDropdown" name="grade" required>
+                      <option selected disabled value="">Select Grade</option>
+                      <option value="Grade 11">Grade 11</option>
+                      <option value="Grade 12">Grade 12</option>
                     </select>
                   </div>
                 </div>
-                <div class="col-sm-6 mb-2">
-                  <div class="form-group">
-                    <label>Section</label>
-                    <span class="text-danger">*</span>
-                    <input type="text" name="section" id="edit_section" class="form-control" pattern="[a-zA-Z'-'\s]*" required>
-                  </div>
+                <div class="col-sm-6">
+                  <label>Strand</label>
+                  <span class="text-danger">*</span>
+                  <select class="custom-select mb-3" id="strandDropdown" name="strand" required>
+                    <option selected disabled value="">Select Strand</option>
+                  </select>
+                </div>
+
+                <div class="col-sm-6">
+                  <label>Section</label>
+                  <span class="text-danger">*</span>
+                  <select class="custom-select mb-3" id="sectionDropdown" name="section" required>
+                    <option selected disabled value="">Select Section</option>
+                  </select>
                 </div>
               </div>
               <div class="row d-none">
@@ -155,14 +187,16 @@ include('../../config/dbconn.php');
                   <div class="form-group">
                     <label>First Name</label>
                     <span class="text-danger">*</span>
-                    <input type="text" name="fname" id="edit_fname" class="form-control" pattern="[a-zA-Z'-'\s]*" required>
+                    <input type="text" name="fname" id="edit_fname" class="form-control" pattern="[a-zA-Z'-'\s]*"
+                      required>
                   </div>
                 </div>
                 <div class="col-sm-6 mb-2">
                   <div class="form-group">
                     <label>Last Name</label>
                     <span class="text-danger">*</span>
-                    <input type="text" name="lname" id="edit_lname" class="form-control" pattern="[a-zA-Z'-'\s]*" required>
+                    <input type="text" name="lname" id="edit_lname" class="form-control" pattern="[a-zA-Z'-'\s]*"
+                      required>
                   </div>
                 </div>
               </div>
@@ -171,7 +205,8 @@ include('../../config/dbconn.php');
                   <div class="form-group">
                     <label>Birthdate</label>
                     <span class="text-danger">*</span>
-                    <input type="text" autocomplete="off" id="edit_dob" name="birthday" class="form-control" id="datepicker" required>
+                    <input type="text" autocomplete="off" id="edit_dob" name="birthday" class="form-control"
+                      id="datepicker" required>
                   </div>
                 </div>
                 <div class="col-sm-6 mb-2 d-none">
@@ -201,14 +236,16 @@ include('../../config/dbconn.php');
                   <div class="form-group">
                     <label>Contact Number</label>
                     <span class="text-danger">*</span>
-                    <input type="text" id="edit_phone" class="form-control js-phone" name="phone" pattern="^(09|\+639)\d{9}$" required>
+                    <input type="text" id="edit_phone" class="form-control js-phone" name="phone"
+                      pattern="^(09|\+639)\d{9}$" required>
                   </div>
                 </div>
                 <div class="col-sm-6 mb-2 d-none">
                   <div class="form-group">
                     <label>Email</label>
                     <span class="text-danger">*</span>
-                    <input type="email" name="email" id="edit_email" class="form-control" pattern="^[-+.\w]{1,64}@[-.\w]{1,64}\.[-.\w]{2,6}$" required>
+                    <input type="email" name="email" id="edit_email" class="form-control"
+                      pattern="^[-+.\w]{1,64}@[-.\w]{1,64}\.[-.\w]{2,6}$" required>
                   </div>
                 </div>
               </div>
@@ -330,6 +367,49 @@ include('../../config/dbconn.php');
 
   <?php include('../../includes/scripts.php'); ?>
   <script>
+    $(document).ready(function () {
+      $('#gradeDropdown').on('change', function () {
+        let grade = $(this).val();
+        if (grade) {
+          $.ajax({
+            url: 'get_strands.php',
+            method: 'POST',
+            data: { grade: grade },
+            dataType: 'json',
+            success: function (response) {
+              console.log(response);
+              $('#strandDropdown').empty().append('<option selected disabled value="">Select Strand</option>');
+              $('#sectionDropdown').empty().append('<option selected disabled value="">Select Section</option>');
+              $.each(response, function (index, value) {
+                $('#strandDropdown').append('<option value="' + value + '">' + value + '</option>');
+              });
+            }
+          });
+        }
+      });
+
+      // When Strand changes, load sections
+      $('#strandDropdown').on('change', function () {
+        let grade = $('#gradeDropdown').val();
+        let strand = $(this).val();
+        if (grade && strand) {
+          $.ajax({
+            url: 'get_sections.php',
+            method: 'POST',
+            data: { grade: grade, strand: strand },
+            dataType: 'json',
+            success: function (response) {
+              $('#sectionDropdown').empty().append('<option selected disabled value="">Select Section</option>');
+              $.each(response, function (index, value) {
+                $('#sectionDropdown').append('<option value="' + value + '">' + value + '</option>');
+              });
+            }
+          });
+        }
+      });
+    });
+  </script>
+  <script>
     var table = $('#studenttbl').DataTable({
       "dom": "<'row'<'col-sm-3'l><'col-sm-5'B><'col-sm-4'f>>" +
         "<'row'<'col-sm-12'tr>>" +
@@ -340,45 +420,45 @@ include('../../config/dbconn.php');
       "responsive": true,
       "pagingType": "simple",
       "buttons": [{
-          extend: 'copyHtml5',
-          className: 'btn btn-outline-secondary btn-sm',
-          text: '<i class="fas fa-clipboard"></i>  Copy',
-          exportOptions: {
-            columns: '.export'
-          }
-        },
-        {
-          extend: 'csvHtml5',
-          className: 'btn btn-outline-secondary btn-sm',
-          text: '<i class="far fa-file-csv"></i>  CSV',
-          exportOptions: {
-            columns: '.export'
-          }
-        },
-        {
-          extend: 'excel',
-          className: 'btn btn-outline-secondary btn-sm',
-          text: '<i class="far fa-file-excel"></i>  Excel',
-          exportOptions: {
-            columns: '.export'
-          }
-        },
-        {
-          extend: 'pdfHtml5',
-          className: 'btn btn-outline-secondary btn-sm',
-          text: '<i class="far fa-file-pdf"></i>  PDF',
-          exportOptions: {
-            columns: '.export'
-          }
-        },
-        {
-          extend: 'print',
-          className: 'btn btn-outline-secondary btn-sm',
-          text: '<i class="fas fa-print"></i>  Print',
-          exportOptions: {
-            columns: '.export'
-          }
+        extend: 'copyHtml5',
+        className: 'btn btn-outline-secondary btn-sm',
+        text: '<i class="fas fa-clipboard"></i>  Copy',
+        exportOptions: {
+          columns: '.export'
         }
+      },
+      {
+        extend: 'csvHtml5',
+        className: 'btn btn-outline-secondary btn-sm',
+        text: '<i class="far fa-file-csv"></i>  CSV',
+        exportOptions: {
+          columns: '.export'
+        }
+      },
+      {
+        extend: 'excel',
+        className: 'btn btn-outline-secondary btn-sm',
+        text: '<i class="far fa-file-excel"></i>  Excel',
+        exportOptions: {
+          columns: '.export'
+        }
+      },
+      {
+        extend: 'pdfHtml5',
+        className: 'btn btn-outline-secondary btn-sm',
+        text: '<i class="far fa-file-pdf"></i>  PDF',
+        exportOptions: {
+          columns: '.export'
+        }
+      },
+      {
+        extend: 'print',
+        className: 'btn btn-outline-secondary btn-sm',
+        text: '<i class="fas fa-print"></i>  Print',
+        exportOptions: {
+          columns: '.export'
+        }
+      }
       ],
       "order": [
         [1, "asc"]
@@ -394,7 +474,7 @@ include('../../config/dbconn.php');
       "columns": [
         {
           "data": 'fname',
-          render: function(data, type, row) {
+          render: function (data, type, row) {
             return row.lname + ", " + row.fname;
           }
         },
@@ -409,7 +489,7 @@ include('../../config/dbconn.php');
         },
         {
           "data": "dob",
-          render: function(data, type, row) {
+          render: function (data, type, row) {
             return moment(data).format("DD-MMM-YYYY")
           }
         },
@@ -424,15 +504,15 @@ include('../../config/dbconn.php');
         },
         {
           "data": 'id',
-          render: function(data, type, row) {
+          render: function (data, type, row) {
             return '<div class="d-flex"> <button data-id="' + data + '" class="btn btn-sm btn-info editbtn mr-2"><i class="fas fa-edit"></i></button> <button data-id="' + data + '" class="btn btn-danger btn-sm deletebtn"><i class="far fa-trash-alt"></i></button> </div>';
           }
         },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
       ],
-      "initComplete": function() {
-        this.api().columns().every(function() {
+      "initComplete": function () {
+        this.api().columns().every(function () {
           var that = this;
-          $('input', this.footer()).on('keyup change clear', function() {
+          $('input', this.footer()).on('keyup change clear', function () {
             if (that.search() !== this.value) {
               that
                 .search(this.value)
@@ -442,14 +522,14 @@ include('../../config/dbconn.php');
         });
       },
     });
-    $('#studenttbl tfoot th.search').each(function() {
+    $('#studenttbl tfoot th.search').each(function () {
       var title = $(this).text();
       $(this).html('<input type="text" placeholder="Search ' + title + '" class="search-input form-control form-control-sm"/>');
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-      $(document).on('click', '.viewbtn', function() {
+      $(document).on('click', '.viewbtn', function () {
         var userid = $(this).data('id');
 
         $.ajax({
@@ -458,7 +538,7 @@ include('../../config/dbconn.php');
           data: {
             userid: userid
           },
-          success: function(response) {
+          success: function (response) {
 
             $('.student_viewing_data').html(response);
             $('#ViewstudentModal').modal('show');
@@ -466,7 +546,7 @@ include('../../config/dbconn.php');
         });
       });
 
-      $(document).on('click', '.editbtn', function() {
+      $(document).on('click', '.editbtn', function () {
         var user_id = $(this).data('id');
 
         $.ajax({
@@ -476,12 +556,13 @@ include('../../config/dbconn.php');
             'checking_editbtn': true,
             'user_id': user_id,
           },
-          success: function(response) {
-            $.each(response, function(key, value) {
+          success: function (response) {
+            $.each(response, function (key, value) {
               $('#edit_id').val(value['id']);
               $('#edit_fname').val(value['fname']);
               $('#edit_lname').val(value['lname']);
               $('#edit_grade').val(value['grade']);
+              $('#edit_strand').val(value['strand']);
               $('#edit_section').val(value['section']);
               $('#edit_address').val(value['address']);
               $('#edit_dob').val(value['dob']);
@@ -499,7 +580,7 @@ include('../../config/dbconn.php');
         });
       });
 
-      $(document).on('click', '.deletebtn', function() {
+      $(document).on('click', '.deletebtn', function () {
         var user_id = $(this).data('id');
         $('#delete_id').val(user_id);
         $('#deletemodal').modal('show');

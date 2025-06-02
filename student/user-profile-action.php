@@ -8,62 +8,25 @@
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $dob = $_POST['birthday'];
-        $gender = $_POST['gender'];
         $address = $_POST['address'];
         $contact = $_POST['contact'];
+        $gfname = $_POST['gfname'];
+        $glname = $_POST['glname'];
+        $gemail = $_POST['gemail'];
+        $gphone = $_POST['gphone'];
 
-        $old_image = $_POST['old_image'];
-        $image = $_FILES['img_url']['name'];
+        $sql = "UPDATE tbluser SET fname='$fname',lname='$lname',dob='$dob',address='$address',phone='$contact',gfname='$gfname',glname='$glname',gemail='$gemail',gphone='$gphone' WHERE id='$id'";
+        $query_run = mysqli_query($conn,$sql);
 
-        
-        $update_filename ="";
-        if($image!=null)
+        if($query_run)
         {
-            $image_extension = pathinfo($image, PATHINFO_EXTENSION);
-            $allowed_file_format = array('jpg', 'png','jpeg');
-            if(!in_array($image_extension, $allowed_file_format))
-            {
-                $_SESSION['error'] = "Upload valid file. jpg, png";
-                header('Location:user-profile.php');
-            }
-            else if (($_FILES['img_url']['size'] > 5000000))
-            {
-                $_SESSION['error'] = "File size exceeds 5MB";
-                header('Location:user-profile.php');
-            }
-            else 
-            {
-                $filename = time().'.'.$image_extension;
-                $update_filename = $filename;
-            }                      
+            $_SESSION['success'] = "Profile Updated Successfully";
+            header('Location: user-profile.php');
         }
         else
         {
-            $update_filename = $old_image;
-        }
-        if($_SESSION['error'] == '')
-        {
-            $sql = "UPDATE tblpatient SET fname='$fname',lname='$lname',dob='$dob',gender='$gender',address='$address',phone='$contact',image='$update_filename' WHERE id='$id'";
-            $query_run = mysqli_query($conn,$sql);
-
-            if($query_run)
-            {
-                if($image != NULL)
-                {
-                    if(file_exists('../upload/patients/'.$old_image))
-                    {
-                        unlink("../upload/patients/".$old_image);
-                    }
-                    move_uploaded_file($_FILES['img_url']['tmp_name'], '../upload/patients/'.$update_filename);
-                }
-                $_SESSION['success'] = "Profile Updated Successfully";
-                header('Location: user-profile.php');
-            }
-            else
-            {
-                $_SESSION['error'] = "Profile Update Failed";
-                header('Location: user-profile.php');
-            }
+            $_SESSION['error'] = "Profile Update Failed";
+            header('Location: user-profile.php');
         }
     }
 
@@ -76,7 +39,7 @@
 
         if(!empty($current_pass) && !empty($new_pass) && !empty($confirm_pass))
         {
-            $sql = "SELECT password FROM tblpatient WHERE id='$id'";
+            $sql = "SELECT password FROM tbluser WHERE id='$id'";
             $result = mysqli_query($conn, $sql);
             if(mysqli_num_rows($result) > 0)
             {
@@ -87,7 +50,7 @@
                         if($new_pass == $confirm_pass)
                         {
                             $hash = password_hash($new_pass,PASSWORD_DEFAULT);
-                            $update_password = "UPDATE tblpatient SET password='$hash' WHERE id='$id' LIMIT 1";
+                            $update_password = "UPDATE tbluser SET password='$hash' WHERE id='$id' LIMIT 1";
                             $update_password_run = mysqli_query($conn,$update_password);
 
                             if($update_password_run)

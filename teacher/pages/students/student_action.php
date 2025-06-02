@@ -113,10 +113,9 @@ if (isset($_POST['checking_editbtn'])) {
 if (isset($_POST['updatedata'])) {
     $id = $_POST['edit_id'];
     $grade  = $_POST['grade'];
-    $strand  = $_POST['strand'];
     $section  = $_POST['section'];
 
-    $sql = "UPDATE tbluser set grade='$grade', strand='$strand', section='$section'  WHERE id='$id' ";
+    $sql = "UPDATE tbluser set grade='$grade',section='$section'  WHERE id='$id' ";
     $query_run = mysqli_query($conn, $sql);
 
     if ($query_run) {

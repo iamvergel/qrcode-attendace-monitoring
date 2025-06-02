@@ -60,7 +60,7 @@ include('includes/sidebar.php');
                      include('../admin/message.php');
                      ?>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                      <div class="card card-primary card-outline">
                         <div class="card-header">
                            <h5 class="card-title m-0">Student Info</h5>
@@ -84,6 +84,10 @@ include('includes/sidebar.php');
                                     <li class="list-group-item">
                                        <b>Grade</b>
                                        <p class="float-right text-muted m-0"><?= $row['grade'] ?></p>
+                                    </li>
+                                    <li class="list-group-item">
+                                       <b>Strand</b>
+                                       <p class="float-right text-muted m-0"><?= $row['strand'] ?></p>
                                     </li>
                                     <li class="list-group-item">
                                        <b>Section</b>
@@ -116,7 +120,7 @@ include('includes/sidebar.php');
                         </div>
                      </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-8">
                      <div class="card">
                         <div class="card-header p-2">
                            <ul class="nav nav-pills" id="custom-tabs-three-tab" role="tablist">
@@ -142,7 +146,7 @@ include('includes/sidebar.php');
 
                                     $user_id = $_SESSION['auth_user']['user_id'];
                                     $today = date('Y-m-d');
-                                    
+
                                     $time_in_check = "SELECT * FROM attendance WHERE user_id='$user_id' AND DATE(timestamp) = '$today' AND status='Time In'";
                                     $time_in_result = mysqli_query($conn, $time_in_check);
 
@@ -151,17 +155,27 @@ include('includes/sidebar.php');
 
                                     $time_in_disabled = mysqli_num_rows($time_in_result) > 0 ? "disabled" : "";
                                     $time_out_disabled = mysqli_num_rows($time_out_result) > 0 || mysqli_num_rows($time_in_result) == 0 ? "disabled" : "";
+
+                                    if ($time_out_disabled == "disabled" && $time_in_disabled == "disabled") {
+                                       echo "<div class='alert text-success border-success bg-transparent alert-dismissible' role='alert'>
+                                       <i class='fas fa-check-circle me-1'></i> Daily Attendance Logged
+                                    </div>";
+                                    }
                                     ?>
 
                                     <div class="col-sm-12 mb-2">
-                                       <button class="btn btn-outline-success w-100 float-left" data-toggle="modal"
+                                       <button
+                                          style="display: <?php echo $time_in_disabled == "disabled" ? "none" : "block"; ?>"
+                                          class="btn btn-outline-success w-100 float-left" data-toggle="modal"
                                           data-target="#cameraModal" <?php echo $time_in_disabled; ?>>
                                           <i class="fa fa-camera"> </i> Attendance Time-in
                                        </button>
                                     </div>
 
                                     <div class="col-sm-12 mb-2">
-                                       <button class="btn btn-outline-danger w-100 float-left" data-toggle="modal"
+                                       <button
+                                          style="display: <?php echo $time_out_disabled == "disabled" ? "none" : "block"; ?>"
+                                          class="btn btn-outline-danger w-100 float-left" data-toggle="modal"
                                           data-target="#cameraoutModal" <?php echo $time_out_disabled; ?>>
                                           <i class="fa fa-camera"> </i> Attendance Time-out
                                        </button>
@@ -304,35 +318,70 @@ include('includes/sidebar.php');
                               </div>
                               <div class="tab-pane fade" id="myattendance" role="tabpanel"
                                  aria-labelledby="myattendance-tab">
+                                 <?php
+                                 $id = $_SESSION['auth_user']['user_id'];
+
+                                 $sql = "
+                                    SELECT 
+                                       DATE(timestamp) AS date,
+                                       (
+                                             SELECT timestamp 
+                                             FROM attendance 
+                                             WHERE user_id = '$id' 
+                                             AND DATE(timestamp) = DATE(a.timestamp) 
+                                             AND status = 'Time In'
+                                             ORDER BY timestamp ASC LIMIT 1
+                                       ) AS time_in,
+                                       (
+                                             SELECT timestamp 
+                                             FROM attendance 
+                                             WHERE user_id = '$id' 
+                                             AND DATE(timestamp) = DATE(a.timestamp) 
+                                             AND status = 'Time Out'
+                                             ORDER BY timestamp DESC LIMIT 1
+                                       ) AS time_out,
+                                       a.grade,
+                                       a.section,
+                                       a.fname,
+                                       a.lname,
+                                       MAX(a.attendance_status) AS attendance_status
+                                    FROM attendance a
+                                    WHERE a.user_id = '$id'
+                                    GROUP BY DATE(timestamp), a.grade, a.section, a.fname, a.lname
+                                    ORDER BY date DESC
+                                 ";
+
+                                 $query_run = mysqli_query($conn, $sql);
+                                 ?>
+
                                  <table id="myattendance-table" class="table table-hover" style="width:100%;">
                                     <thead>
                                        <tr>
-                                          <th class="bg-light">Date & Time</th>
-                                          <th class="bg-light">Status</th>
+                                          <th class="bg-light">Date</th>
+                                          <th class="bg-light">Time In</th>
+                                          <th class="bg-light">Time Out</th>
                                           <th class="bg-light">Grade</th>
                                           <th class="bg-light">Section</th>
-                                          <th class="bg-light">Full Name</th>
+                                          <!-- <th class="bg-light">Full Name</th> -->
+                                          <th class="bg-light">Status</th>
                                        </tr>
                                     </thead>
                                     <tbody>
-                                       <?php
-                                       $id = $_SESSION['auth_user']['user_id'];
-                                       $sql = "SELECT * FROM attendance WHERE user_id ='$id' ORDER BY id DESC";
-                                       $query_run = mysqli_query($conn, $sql);
-
-                                       while ($row = mysqli_fetch_array($query_run)) {
-                                          ?>
+                                       <?php while ($row = mysqli_fetch_array($query_run)) { ?>
                                           <tr>
-                                             <td><?= date('Y-m-d h:i A', strtotime($row['timestamp'])); ?></td>
-                                             <td><?= $row['status']; ?></td>
+                                             <td><?= $row['date']; ?></td>
+                                             <td><?= date('h:i A', strtotime($row['time_in'])); ?></td>
+                                             <td>
+                                                <?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : 'Not yet'; ?>
+                                             </td>
                                              <td><?= $row['grade']; ?></td>
                                              <td><?= $row['section']; ?></td>
-                                             <td><?= $row['fname'] . ' ' . $row['lname']; ?></td>
+                                             <!-- <td><?= $row['fname'] . ' ' . $row['lname']; ?></td> -->
+                                             <td><?= $row['attendance_status']; ?></td>
                                           </tr>
                                        <?php } ?>
                                     </tbody>
                                  </table>
-
                               </div>
                            </div>
                         </div>

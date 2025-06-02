@@ -45,6 +45,7 @@
 <script src="admin/assets/dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="admin/assets/dist/js/demo.js"></script>
+
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="admin/assets/dist/js/pages/dashboard.js"></script>
 <script src="admin/assets/plugins/inputmask/jquery.inputmask.bundle.min.js"></script>
@@ -53,24 +54,24 @@
 <script>
 	$(document).ready(function() {
 
-		function load_unseen_notification(view = '') {
-			var user_id = $('#session_id').val();
-			$.ajax({
-				url: "fetch_user_notification.php",
-				method: "POST",
-				data: {
-					view: view,
-					'user_id': user_id
-				},
-				dataType: "json",
-				success: function(data) {
-					$('.dropdown-notif').html(data.notification);
-					if (data.unseen_notification > 0) {
-						$('.count').html(data.unseen_notification);
-					}
-				}
-			});
-		}
+		// function load_unseen_notification(view = '') {
+		// 	var user_id = $('#session_id').val();
+		// 	$.ajax({
+		// 		url: "fetch_user_notification.php",
+		// 		method: "POST",
+		// 		data: {
+		// 			view: view,
+		// 			'user_id': user_id
+		// 		},
+		// 		dataType: "json",
+		// 		success: function(data) {
+		// 			$('.dropdown-notif').html(data.notification);
+		// 			if (data.unseen_notification > 0) {
+		// 				$('.count').html(data.unseen_notification);
+		// 			}
+		// 		}
+		// 	});
+		// }
 
 		load_unseen_notification();
 		$(document).on('click', '.notification', function() {

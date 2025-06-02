@@ -36,6 +36,8 @@ include('includes/sidebar.php');
                                     <ul class="nav nav-pills">
                                         <li class="nav-item"><a class="nav-link active" href="#info"
                                                 data-toggle="tab">Student Profile</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Change
+                                                Password</a></li>
                                     </ul>
                                 </div>
                                 <div class="card-body">
@@ -57,14 +59,20 @@ include('includes/sidebar.php');
                                                                 <label for="">LRN</label>
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" name="lrn" class="form-control"
-                                                                    value="<?= $row['lrn'] ?>" pattern="[a-zA-Z'-'\s]*"
-                                                                    readonly required>
+                                                                    value="<?= $row['lrn'] ?>" pattern="[a-zA-Z'-'\s]*" readonly
+                                                                    required>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Grade</label>
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" name="grade" class="form-control"
                                                                     value="<?= $row['grade'] ?>" pattern="[a-zA-Z'-'\s]*"
+                                                                    readonly required>
+                                                            </div><div class="form-group col-md-6">
+                                                                <label for="">Strand</label>
+                                                                <span class="text-danger">*</span>
+                                                                <input type="text" class="form-control"
+                                                                    value="<?= $row['strand'] ?>" pattern="[a-zA-Z'-'\s]*"
                                                                     readonly required>
                                                             </div>
                                                             <div class="form-group col-md-6">
@@ -79,20 +87,20 @@ include('includes/sidebar.php');
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" name="fname" class="form-control"
                                                                     value="<?= $row['fname'] ?>" pattern="[a-zA-Z'-'\s]*"
-                                                                    readonly required>
+                                                                    required>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Last Name</label>
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" name="lname" class="form-control"
                                                                     value="<?= $row['lname'] ?>" pattern="[a-zA-Z'-'\s]*"
-                                                                    readonly required>
+                                                                    required>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Address</label>
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" name="address" class="form-control"
-                                                                    value="<?= $row['address'] ?>" readonly required>
+                                                                    value="<?= $row['address'] ?>" required>
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="">Birthdate</label>
@@ -105,7 +113,7 @@ include('includes/sidebar.php');
                                                                 <label for="">Gender</label>
                                                                 <span class="text-danger">*</span>
                                                                 <?php $array = array("Female", "Male", "Others");
-                                                                echo "<select class='custom-select' name='gender' disabled required>";
+                                                                echo "<select class='custom-select' disabled required>";
                                                                 foreach ($array as $gender) {
                                                                     if ($gender == $row['gender']) {
                                                                         echo "<option selected>$gender</option>";
@@ -127,7 +135,7 @@ include('includes/sidebar.php');
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" class="form-control js-phone"
                                                                     value="<?= substr($row['phone'], 3) ?>" name="contact"
-                                                                    pattern="^(09|\+639)\d{9}$" readonly required>
+                                                                    pattern="^(09|\+639)\d{9}$" required>
                                                             </div>
                                                         </div>
                                                         <h3 class="text-muted my-2">Guardian Information</h3>
@@ -135,30 +143,30 @@ include('includes/sidebar.php');
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Guardian First Name</label>
                                                                 <span class="text-danger">*</span>
-                                                                <input type="text" name="fname" class="form-control"
+                                                                <input type="text" class="form-control"
                                                                     value="<?= $row['gfname'] ?>" pattern="[a-zA-Z'-'\s]*"
-                                                                    readonly required>
+                                                                    name="gfname" required>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Guardian Last Name</label>
                                                                 <span class="text-danger">*</span>
-                                                                <input type="text" name="lname" class="form-control"
+                                                                <input type="text" class="form-control"
                                                                     value="<?= $row['glname'] ?>" pattern="[a-zA-Z'-'\s]*"
-                                                                    readonly required>
+                                                                    name="glname" required>
                                                             </div>
 
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Guardian Email</label>
                                                                 <span class="text-danger">*</span>
-                                                                <input type="text" name="address" class="form-control"
-                                                                    value="<?= $row['gemail'] ?>" readonly required>
+                                                                <input type="text" class="form-control"
+                                                                    value="<?= $row['gemail'] ?>" name="gemail" required>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="">Guardian Contact Number</label>
                                                                 <span class="text-danger">*</span>
                                                                 <input type="text" class="form-control js-phone"
-                                                                    value="<?= substr($row['gphone'], 3) ?>" name="contact"
-                                                                    pattern="^(09|\+639)\d{9}$" readonly required>
+                                                                    value="<?= substr($row['gphone'], 3) ?>" name="gphone"
+                                                                    pattern="^(09|\+639)\d{9}$" required>
                                                             </div>
                                                         </div>
                                                         <?php
@@ -166,9 +174,50 @@ include('includes/sidebar.php');
                                                 }
                                                 ?>
                                                 <div class="row">
-                                                    <!-- <div class="col-md-12">
-                                                        <button type="submit" name="update_user" class="btn btn-danger float-right">Update</button>
-                                                    </div> -->
+                                                    <div class="col-md-12">
+                                                        <button type="submit" name="update_user"
+                                                            class="btn btn-info float-right">Update</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane" id="pass">
+                                            <form action="user-profile-action.php" method="post">
+                                                <div class="row">
+                                                    <input type="hidden" name="userid"
+                                                        value="<?= $_SESSION['auth_user']['user_id'] ?>">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Current password</label>
+                                                        <input type="password" autocomplete="off" name="current_pass"
+                                                            class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>New Password</label>
+                                                        <input type="password" autocomplete="new-password"
+                                                            name="new_pass" id="password" class="form-control"
+                                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}"
+                                                            title="Must contain at least one number and one uppercase and lowercase letter,at least one special character, and at least 8 or more characters"
+                                                            required>
+                                                        <div class="show_hide">
+                                                            <small>Password Strength: <span id="result"> </span></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Confirm Password</label>
+                                                        <input type="password" autocomplete="new-password"
+                                                            name="confirm_pass" class="form-control"
+                                                            id="confirmPassword" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button type="submit" name="change_password"
+                                                            class="btn btn-info float-right">Update</button>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>

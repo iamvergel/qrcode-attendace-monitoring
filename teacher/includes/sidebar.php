@@ -37,12 +37,6 @@
             <p>Generate QR Code</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="../manage-section" class="nav-link <?= $page == 'manage-section' ? 'active' : '' ?>">
-            <i class="nav-icon fas fa-list"></i>
-            <p>Manage Section</p>
-          </a>
-        </li>
       </ul>
     </nav>
   </div>

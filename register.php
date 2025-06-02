@@ -46,8 +46,8 @@ if (isset($_SESSION['auth'])) {
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="input-group mb-3">
-                      <input type="text" class="form-control" name="lrn" placeholder="Student LRN"
-                        pattern="[0-9]*" inputmode="numeric" maxlength="12" required>
+                      <input type="text" class="form-control" name="lrn" placeholder="Student LRN" pattern="[0-9]*"
+                        inputmode="numeric" maxlength="12" required>
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-user"></span>
@@ -66,7 +66,7 @@ if (isset($_SESSION['auth'])) {
                     </script>
                   </div>
                   <div class="col-sm-6">
-                    
+
                   </div>
                   <div class="col-sm-6">
                     <div class="input-group mb-3">
@@ -93,24 +93,25 @@ if (isset($_SESSION['auth'])) {
                 </div>
                 <div class="row">
                   <div class="col-sm-3">
-                    <select class="custom-select mb-3" name="grade" required>
-                      <option selected disabled value="">Grade</option>
-                      <option>Grade 11</option>
-                      <option>Grade 12</option>
+                    <select class="custom-select mb-3" id="gradeDropdown" name="grade" required>
+                      <option selected disabled value="">Select Grade</option>
+                      <option value="Grade 11">Grade 11</option>
+                      <option value="Grade 12">Grade 12</option>
                     </select>
                   </div>
 
                   <div class="col-sm-3">
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control" name="section" placeholder="Section"
-                        pattern="[a-zA-Z'-'\s]*" required>
-                      <div class="input-group-append">
-                        <div class="input-group-text">
-                          <span class="fas fa-file"></span>
-                        </div>
-                      </div>
-                    </div>
+                    <select class="custom-select mb-3" id="strandDropdown" name="strand" required>
+                      <option selected disabled value="">Select Strand</option>
+                    </select>
                   </div>
+
+                  <div class="col-sm-3">
+                    <select class="custom-select mb-3" id="sectionDropdown" name="section" required>
+                      <option selected disabled value="">Select Section</option>
+                    </select>
+                  </div>
+
 
                   <div class="col-sm-3">
                     <div class="input-group mb-3">
@@ -258,7 +259,8 @@ if (isset($_SESSION['auth'])) {
 
                 <div class="row">
                   <div class="form-group col-sm-6">
-                    <button type="button" onclick="window.location.href='index.php'" class="btn btn-block btn-secondary">I
+                    <button type="button" onclick="window.location.href='index.php'"
+                      class="btn btn-block btn-secondary">I
                       already have an account</button>
                   </div>
                   <div class="form-group col-sm-6">
@@ -276,6 +278,50 @@ if (isset($_SESSION['auth'])) {
   </div>
 
   <?php include('includes/scripts.php'); ?>
+
+  <script>
+    $(document).ready(function () {
+      $('#gradeDropdown').on('change', function () {
+        let grade = $(this).val();
+        if (grade) {
+          $.ajax({
+            url: 'get_strands.php',
+            method: 'POST',
+            data: { grade: grade },
+            dataType: 'json',
+            success: function (response) {
+              console.log(response);
+              $('#strandDropdown').empty().append('<option selected disabled value="">Select Strand</option>');
+              $('#sectionDropdown').empty().append('<option selected disabled value="">Select Section</option>');
+              $.each(response, function (index, value) {
+                $('#strandDropdown').append('<option value="' + value + '">' + value + '</option>');
+              });
+            }
+          });
+        }
+      });
+
+      // When Strand changes, load sections
+      $('#strandDropdown').on('change', function () {
+        let grade = $('#gradeDropdown').val();
+        let strand = $(this).val();
+        if (grade && strand) {
+          $.ajax({
+            url: 'get_sections.php',
+            method: 'POST',
+            data: { grade: grade, strand: strand },
+            dataType: 'json',
+            success: function (response) {
+              $('#sectionDropdown').empty().append('<option selected disabled value="">Select Section</option>');
+              $.each(response, function (index, value) {
+                $('#sectionDropdown').append('<option value="' + value + '">' + value + '</option>');
+              });
+            }
+          });
+        }
+      });
+    });
+  </script>
   <script>
     $('#password').keyup(function () {
       var password = $('#password').val();

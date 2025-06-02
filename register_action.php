@@ -74,6 +74,7 @@ if (isset($_POST['register_btn'])) {
     $phone = $_POST['phone'];
     $email = $_POST['email'];
     $grade = $_POST['grade'];
+    $strand = $_POST['strand'];
     $section = $_POST['section'];
     $gfname = $_POST['gfname'];
     $glname = $_POST['glname'];
@@ -94,9 +95,9 @@ if (isset($_POST['register_btn'])) {
             header('Location:register.php');
         } else {
             $sql = "INSERT INTO tbluser 
-            (lrn, fname, lname, grade, section, address, dob, gender, phone, email, password, role, verify_token, created_at, gfname, glname, gemail, gphone)
+            (lrn, fname, lname, grade, strand, section, address, dob, gender, phone, email, password, role, verify_token, created_at, gfname, glname, gemail, gphone)
             VALUES 
-            ('$lrn', '$fname', '$lname', '$grade', '$section', '$address', '$dob', '$gender', '$phone', '$email', '$hash', 'student', '$verify_token', '$regdate', '$gfname', '$glname', '$gemail', '$gphone')";
+            ('$lrn', '$fname', '$lname', '$grade', '$strand', '$section', '$address', '$dob', '$gender', '$phone', '$email', '$hash', 'student', '$verify_token', '$regdate', '$gfname', '$glname', '$gemail', '$gphone')";
 
             $patient_query_run = mysqli_query($conn, $sql);
             if ($patient_query_run) {

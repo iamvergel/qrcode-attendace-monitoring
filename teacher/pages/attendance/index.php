@@ -291,74 +291,75 @@ include('../../config/dbconn.php');
                 <!-- /.card-header -->
                 <div class="card-body">
                   <?php
-                    $sql = "
-                      SELECT 
-                          DATE(timestamp) AS date,
-                          lrn,
-                          fname,
-                          lname,
-                          grade,
-                          section,
-                          personal_email,
-                          (
-                              SELECT timestamp 
-                              FROM attendance 
-                              WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time In'
-                              ORDER BY timestamp ASC LIMIT 1
-                          ) AS time_in,
-                          (
-                              SELECT timestamp 
-                              FROM attendance 
-                              WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time Out'
-                              ORDER BY timestamp DESC LIMIT 1
-                          ) AS time_out,
-                          MAX(status) AS latest_status
-                      FROM attendance a
-                      GROUP BY DATE(timestamp), lrn, fname, lname, grade, section, personal_email
-                      ORDER BY date DESC
-                  ";
+$sql = "
+    SELECT 
+        DATE(timestamp) AS date,
+        lrn,
+        fname,
+        lname,
+        grade,
+        section,
+        personal_email,
+        (
+            SELECT timestamp 
+            FROM attendance 
+            WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time In'
+            ORDER BY timestamp ASC LIMIT 1
+        ) AS time_in,
+        (
+            SELECT timestamp 
+            FROM attendance 
+            WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time Out'
+            ORDER BY timestamp DESC LIMIT 1
+        ) AS time_out,
+        MAX(status) AS latest_status
+    FROM attendance a
+    GROUP BY DATE(timestamp), lrn, fname, lname, grade, section, personal_email
+    ORDER BY date DESC
+";
 
-                  $result = $conn->query($sql);
-                  ?>
+$result = $conn->query($sql);
+?>
 
-                  <table id="studenttbl" class="table table-borderless table-hover" style="width: 100%;">
-                    <thead class="bg-light">
-                      <tr>
-                        <th class="export">Student Name</th>
-                        <th class="export">LRN</th>
-                        <th class="export">Grade</th>
-                        <th class="export">Section</th>
-                        <th class="export">Personal Email</th>
-                        <th class="export">Date</th>
-                        <th class="export">Time In</th>
-                        <th class="export">Time Out</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php
-                      if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                          $date = date('F j, Y', strtotime($row['date']));
-                          $time_in = $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '—';
-                          $time_out = $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '—';
+<table id="studenttbl" class="table table-borderless table-hover" style="width: 100%;">
+    <thead class="bg-light">
+        <tr>
+            <th class="export">Student Name</th>
+            <th class="export">LRN</th>
+            <th class="export">Grade</th>
+            <th class="export">Section</th>
+            <th class="export">Personal Email</th>
+            <th class="export">Date</th>
+            <th class="export">Time In</th>
+            <th class="export">Time Out</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $date = date('F j, Y', strtotime($row['date']));
+                $time_in = $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '—';
+                $time_out = $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '—';
 
-                          echo "<tr>
-                                    <td>{$row['fname']} {$row['lname']}</td>
-                                    <td>{$row['lrn']}</td>
-                                    <td>{$row['grade']}</td>
-                                    <td>{$row['section']}</td>
-                                    <td>{$row['personal_email']}</td>
-                                    <td>{$date}</td>
-                                    <td>{$time_in}</td>
-                                    <td>{$time_out}</td>
-                                </tr>";
-                        }
-                      } else {
-                        echo "<tr><td colspan='8' class='text-center'>No records found.</td></tr>";
-                      }
-                      ?>
-                    </tbody>
-                  </table>
+                echo "<tr>
+                    <td>{$row['fname']} {$row['lname']}</td>
+                    <td>{$row['lrn']}</td>
+                    <td>{$row['grade']}</td>
+                    <td>{$row['section']}</td>
+                    <td>{$row['personal_email']}</td>
+                    <td>{$date}</td>
+                    <td>{$time_in}</td>
+                    <td>{$time_out}</td>
+                </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='8' class='text-center'>No records found.</td></tr>";
+        }
+        ?>
+    </tbody>
+</table>
+
                 </div>
               </div>
               <!-- /.card -->

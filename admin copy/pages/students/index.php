@@ -334,7 +334,6 @@ include('../../config/dbconn.php');
                         <th class="export">Gender</th>
                         <th class="export">Contact</th>
                         <th class="export">Email</th>
-                        <th>Action</th>
                       </tr>
                     </thead>
                     <tfoot>
@@ -347,7 +346,6 @@ include('../../config/dbconn.php');
                         <th class="search">Gender</th>
                         <th class="search">Contact</th>
                         <th class="search">Email</th>
-                        <th></th>
                       </tr>
                     </tfoot>
                   </table>
@@ -502,12 +500,12 @@ include('../../config/dbconn.php');
         {
           "data": "email"
         },
-        {
-          "data": 'id',
-          render: function (data, type, row) {
-            return '<div class="d-flex"> <button data-id="' + data + '" class="btn btn-sm btn-info editbtn mr-2"><i class="fas fa-edit"></i></button> <button data-id="' + data + '" class="btn btn-danger btn-sm deletebtn"><i class="far fa-trash-alt"></i></button> </div>';
-          }
-        },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
+        // {
+        //   "data": 'id',
+        //   render: function (data, type, row) {
+        //     return '<div class="d-flex"> <button data-id="' + data + '" class="btn btn-sm btn-info editbtn mr-2"><i class="fas fa-edit"></i></button> <button data-id="' + data + '" class="btn btn-danger btn-sm deletebtn"><i class="far fa-trash-alt"></i></button> </div>';
+        //   }
+        // },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
       ],
       "initComplete": function () {
         this.api().columns().every(function () {

@@ -13,12 +13,12 @@
             <p>Dashboard </p>
           </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a href="../teacher" class="nav-link <?= $page == 'teacher' ? 'active' : '' ?>">
             <i class="fas fa-user-shield nav-icon"></i>
             <p>Manage Teacher</p>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a href="../students" class="nav-link <?= $page == 'students' ? 'active' : '' ?>">
             <i class="nav-icon fas fa-users"></i>

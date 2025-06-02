@@ -10,12 +10,12 @@
         <span><?php
         include_once('../../config/dbconn.php');
         if (isset($_SESSION['auth'])) {
-          $sql = "SELECT * FROM tbladmin WHERE id = '" . $_SESSION['auth_user']['user_id'] . "'";
+          $sql = "SELECT * FROM tbluser WHERE id = '" . $_SESSION['auth_user']['user_id'] . "'";
           $query_run = mysqli_query($conn, $sql);
           while ($row = mysqli_fetch_array($query_run)) {
             ?>
               <span class="d-inline  d-md-inline btn btn-primary rounded-pill">
-                <?= $row['name'] ?>
+                <?= $row['fname'] . ' ' . $row['lname'] ?>
                 <input type="hidden" id="session_id" value="<?= $row['id'] ?>">
               </span>
             <?php }

@@ -18,7 +18,8 @@ include('../../config/dbconn.php');
         array( 'db' => 'email',  'dt' => 'email' ),
         array( 'db' => 'id',   'dt' => 'id' ),
     );
-    
+
+    $where = "role='student'";
     require('../../config/sspconn.php');
 
     require('../../ssp.class.php');

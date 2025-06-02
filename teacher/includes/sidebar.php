@@ -13,12 +13,12 @@
             <p>Dashboard </p>
           </a>
         </li>
-        <!-- <li class="nav-item">
-          <a href="../admins" class="nav-link <?= $page == 'admins' ? 'active' : '' ?>">
+        <li class="nav-item">
+          <a href="../teacher" class="nav-link <?= $page == 'teacher' ? 'active' : '' ?>">
             <i class="fas fa-user-shield nav-icon"></i>
-            <p>Admins </p>
+            <p>Manage Teacher</p>
           </a>
-        </li> -->
+        </li>
         <li class="nav-item">
           <a href="../students" class="nav-link <?= $page == 'students' ? 'active' : '' ?>">
             <i class="nav-icon fas fa-users"></i>
@@ -35,6 +35,12 @@
           <a href="../qr-code" class="nav-link <?= $page == 'qr-code' ? 'active' : '' ?>">
             <i class="nav-icon fas fa-qrcode"></i>
             <p>Generate QR Code</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../manage-section" class="nav-link <?= $page == 'manage-section' ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-list"></i>
+            <p>Manage Section</p>
           </a>
         </li>
       </ul>

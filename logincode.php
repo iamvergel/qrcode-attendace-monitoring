@@ -34,6 +34,9 @@ if (isset($_POST['login_btn'])) {
                     } else if ($_SESSION['auth_role'] == "student") {
                         header('Location: student/index.php');
                         exit(0);
+                    }  else if ($_SESSION['auth_role'] == "teacher") {
+                        header('Location: teacher/pages/dashboard');
+                        exit(0);
                     } else {
                         $_SESSION['danger'] = "Access Denied";
                         header('Location: index.php');

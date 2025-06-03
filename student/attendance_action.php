@@ -9,7 +9,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require '../vendor/autoload.php';
 
-function sendGuardianEmail($fname, $lrn, $lname, $email, $gemail, $status, $time, $grade, $section, $system_name, $mail_host, $mail_username, $mail_password)
+function sendGuardianEmail($fname, $lrn, $lname, $email, $gemail, $status, $time, $grade, $strand, $section, $system_name, $mail_host, $mail_username, $mail_password)
 {
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -46,6 +46,7 @@ function sendGuardianEmail($fname, $lrn, $lname, $email, $gemail, $status, $time
             <ul>
                 <li><strong>LRN:</strong> $lrn</li>
                 <li><strong>Grade:</strong> $grade</li>
+                <li><strong>Strand:</strong> $strand</li>
                 <li><strong>Section:</strong> $section</li>
                 <li><strong>Status:</strong> $status</li>
                 <li><strong>Date:</strong> $date_formatted</li>
@@ -77,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fname = $user['fname'];
         $lname = $user['lname'];
         $grade = $user['grade'];
+        $strand = $user['strand'];
         $section = $user['section'];
         $email = $user['email'];
         $gemail = $user['gemail'];
@@ -94,11 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($last_check_row && $last_check_row['status'] == $status) {
                 $_SESSION['message'] = "You have already " . ($status == 'Time In' ? 'timed in' : 'timed out') . " for today.";
             } else {
-                $insert = "INSERT INTO attendance (user_id, lrn, fname, lname, grade, section, personal_email, guardian_email, status, timestamp)
-                           VALUES ('$user_id', '$lrn', '$fname', '$lname', '$grade', '$section', '$email', '$gemail', '$status', '$time')";
+                $insert = "INSERT INTO attendance (user_id, lrn, fname, lname, grade, strand, section, personal_email, guardian_email, status, timestamp)
+                           VALUES ('$user_id', '$lrn', '$fname', '$lname', '$grade', '$strand', '$section', '$email', '$gemail', '$status', '$time')";
 
                 if (mysqli_query($conn, $insert)) {
-                    sendGuardianEmail($fname, $lrn, $lname, $email, $gemail, $status, $time, $grade, $section, $system_name, $mail_host, $mail_username, $mail_password);
+                    sendGuardianEmail($fname, $lrn, $lname, $email, $gemail, $status, $time, $grade, $strand, $section, $system_name, $mail_host, $mail_username, $mail_password);
 
                     $_SESSION['message'] = "Attendance " . ($status == 'Time In' ? 'Time In' : 'Time Out') . " successfully recorded.";
                 } else {

@@ -421,7 +421,7 @@ include('includes/sidebar.php');
 
                            document.getElementById("user_id").value = user.id;
                            document.getElementById("full_name").value = user.fname + ' ' + user.lname;
-                           document.getElementById("grade_section").value = user.grade + ' - ' + user.section;
+                           document.getElementById("grade_section").value = user.grade + ' - ' + user.strand + ' - ' + user.section;
                            document.getElementById("personal_email").value = user.email;
                            document.getElementById("guardian_email").value = user.gemail;
 
@@ -485,7 +485,7 @@ include('includes/sidebar.php');
 
                            document.getElementById("user_idout").value = user.id;
                            document.getElementById("full_nameout").value = user.fname + ' ' + user.lname;
-                           document.getElementById("grade_sectionout").value = user.grade + ' - ' + user.section;
+                           document.getElementById("grade_sectionout").value = user.grade + ' - '  + user.strand + ' - ' + user.section;
                            document.getElementById("personal_emailout").value = user.email;
                            document.getElementById("guardian_emailout").value = user.gemail;
 

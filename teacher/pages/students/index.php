@@ -134,8 +134,7 @@ include('../../config/dbconn.php');
                   <div class="form-group">
                     <label>Current Grade</label>
                     <span class="text-danger">*</span>
-                    <input type="text" id="edit_grade" class="form-control" pattern="[a-zA-Z'-'\s]*"
-                      readonly>
+                    <input type="text" id="edit_grade" class="form-control" pattern="[a-zA-Z'-'\s]*" readonly>
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -296,7 +295,21 @@ include('../../config/dbconn.php');
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">student</h1>
+              <h1 class="m-0">
+                <?php
+                include_once('../../config/dbconn.php');
+                if (isset($_SESSION['auth'])) {
+                  $sql = "SELECT * FROM tbluser WHERE id = '" . $_SESSION['auth_user']['user_id'] . "'";
+                  $query_run = mysqli_query($conn, $sql);
+                  while ($row = mysqli_fetch_array($query_run)) {
+                    ?>
+                    <?= $row['grade'] . ' ' . $row['strand'] . ' ' . $row['section']; ?>
+                  </h1> <?php }
+                } else {
+                  echo "Not Logged in";
+                }
+
+                ?>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -317,7 +330,20 @@ include('../../config/dbconn.php');
               ?>
               <div class="card card-primary card-outline">
                 <div class="card-header">
-                  <h3 class="card-title">student List</h3>
+                  <h3 class="card-title">
+                    <?php
+                    include_once('../../config/dbconn.php');
+                    if (isset($_SESSION['auth'])) {
+                      $sql = "SELECT * FROM tbluser WHERE id = '" . $_SESSION['auth_user']['user_id'] . "'";
+                      $query_run = mysqli_query($conn, $sql);
+                      while ($row = mysqli_fetch_array($query_run)) {
+                        ?>
+                        <?= $row['grade'] . ' ' . $row['strand'] . ' ' . $row['section']; ?>
+                      </h3> <?php }
+                    } else {
+                      echo "Not Logged in";
+                    }
+                    ?>
                   <!-- <button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#AddstudentModal">
                     <i class="fa fa-plus"></i> &nbsp;&nbsp;Add student</button> -->
                 </div>
@@ -329,11 +355,13 @@ include('../../config/dbconn.php');
                         <th class="export">student</th>
                         <th class="export">LRN</th>
                         <th class="export">Grade</th>
+                        <th class="export">Strand</th>
                         <th class="export">Section</th>
                         <th class="export">Birthday</th>
                         <th class="export">Gender</th>
                         <th class="export">Contact</th>
                         <th class="export">Email</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tfoot>
@@ -341,11 +369,13 @@ include('../../config/dbconn.php');
                         <th class="search">student</th>
                         <th class="search">LRN</th>
                         <th class="search">Grade</th>
+                        <th class="search">Strand</th>
                         <th class="search">Section</th>
                         <th class="search">Birthday</th>
                         <th class="search">Gender</th>
                         <th class="search">Contact</th>
                         <th class="search">Email</th>
+                        <th></th>
                       </tr>
                     </tfoot>
                   </table>
@@ -483,6 +513,9 @@ include('../../config/dbconn.php');
           "data": "grade"
         },
         {
+          "data": "strand"
+        },
+        {
           "data": "section"
         },
         {
@@ -500,12 +533,12 @@ include('../../config/dbconn.php');
         {
           "data": "email"
         },
-        // {
-        //   "data": 'id',
-        //   render: function (data, type, row) {
-        //     return '<div class="d-flex"> <button data-id="' + data + '" class="btn btn-sm btn-info editbtn mr-2"><i class="fas fa-edit"></i></button> <button data-id="' + data + '" class="btn btn-danger btn-sm deletebtn"><i class="far fa-trash-alt"></i></button> </div>';
-        //   }
-        // },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
+        {
+          "data": 'lrn',
+          render: function (data, type, row) {
+            return '<div class="d-flex"> <a href="student_details.php?id=' + row.lrn + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a> </div>';
+          }
+        },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
       ],
       "initComplete": function () {
         this.api().columns().every(function () {

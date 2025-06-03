@@ -291,34 +291,76 @@ include('../../config/dbconn.php');
                 <!-- /.card-header -->
                 <div class="card-body">
                   <?php
-                    $sql = "
-                      SELECT 
-                          DATE(timestamp) AS date,
-                          lrn,
-                          fname,
-                          lname,
-                          grade,
-                          section,
-                          personal_email,
-                          (
-                              SELECT timestamp 
-                              FROM attendance 
-                              WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time In'
-                              ORDER BY timestamp ASC LIMIT 1
-                          ) AS time_in,
-                          (
-                              SELECT timestamp 
-                              FROM attendance 
-                              WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time Out'
-                              ORDER BY timestamp DESC LIMIT 1
-                          ) AS time_out,
-                          MAX(status) AS latest_status
-                      FROM attendance a
-                      GROUP BY DATE(timestamp), lrn, fname, lname, grade, section, personal_email
-                      ORDER BY date DESC
-                  ";
+                    if (isset($_SESSION['auth'])) {
+                      $user_id = $_SESSION['auth_user']['user_id'];
+                      $sql_user_count = "SELECT grade, strand, section FROM tbluser WHERE id = '$user_id'";
+                      $query_run_user_count = mysqli_query($conn, $sql_user_count);
+                      $row_user_count = mysqli_fetch_assoc($query_run_user_count);
+                      $grade = $row_user_count['grade'];
+                      $strand = $row_user_count['strand'];
+                      $section = $row_user_count['section'];
 
-                  $result = $conn->query($sql);
+                      $today = date('Y-m-d');
+                      $sql = "
+                        SELECT 
+                            DATE(timestamp) AS date,
+                            lrn,
+                            fname,
+                            lname,
+                            grade,
+                            section,
+                            personal_email,
+                            (
+                                SELECT timestamp 
+                                FROM attendance 
+                                WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time In'
+                                ORDER BY timestamp ASC LIMIT 1
+                            ) AS time_in,
+                            (
+                                SELECT timestamp 
+                                FROM attendance 
+                                WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time Out'
+                                ORDER BY timestamp DESC LIMIT 1
+                            ) AS time_out,
+                            MAX(status) AS latest_status,
+                            MAX(attendance_status) AS attendance_status
+                        FROM attendance a
+                        WHERE a.grade = '$grade' AND a.strand = '$strand' AND a.section = '$section' AND DATE(a.timestamp) = '$today'
+                        GROUP BY DATE(timestamp), lrn, fname, lname, grade, section, personal_email
+                        ORDER BY date DESC
+                    ";
+                    } else {
+                      $sql = "
+                        SELECT 
+                            DATE(timestamp) AS date,
+                            lrn,
+                            fname,
+                            lname,
+                            grade,
+                            section,
+                            personal_email,
+                            attendance_status,
+                            (
+                                SELECT timestamp 
+                                FROM attendance 
+                                WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time In'
+                                ORDER BY timestamp ASC LIMIT 1
+                            ) AS time_in,
+                            (
+                                SELECT timestamp 
+                                FROM attendance 
+                                WHERE lrn = a.lrn AND DATE(timestamp) = DATE(a.timestamp) AND status = 'Time Out'
+                                ORDER BY timestamp DESC LIMIT 1
+                            ) AS time_out,
+                            MAX(status) AS latest_status
+                        FROM attendance a
+                        WHERE DATE(a.timestamp) = '$today'
+                        GROUP BY DATE(timestamp), lrn, fname, lname, grade, section, personal_email, attendance_status
+                        ORDER BY date DESC
+                    ";
+                    }
+
+                    $result = $conn->query($sql);
                   ?>
 
                   <table id="studenttbl" class="table table-borderless table-hover" style="width: 100%;">
@@ -332,11 +374,13 @@ include('../../config/dbconn.php');
                         <th class="export">Date</th>
                         <th class="export">Time In</th>
                         <th class="export">Time Out</th>
+                        <th class="export">Status</th>
+                        <th width="15%">Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
-                      if ($result->num_rows > 0) {
+                      if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                           $date = date('F j, Y', strtotime($row['date']));
                           $time_in = $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '—';
@@ -351,10 +395,24 @@ include('../../config/dbconn.php');
                                     <td>{$date}</td>
                                     <td>{$time_in}</td>
                                     <td>{$time_out}</td>
+                                    <td>{$row['attendance_status']}</td>
+                                    <td>
+                                      <div class='dropdown'>
+                                        <button class='btn btn-sm btn-secondary dropdown-toggle w-100' type='button' id='actionDropdown' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                          Action
+                                        </button>
+                                        <form action='student_action.php' method='POST' class='dropdown-menu' aria-labelledby='actionDropdown'>
+                                          <input type='hidden' name='id' value='{$row['lrn']}'>
+                                          <button type='submit' name='action' value='present' class='dropdown-item'>Mark Present</button>
+                                          <button type='submit' name='action' value='late' class='dropdown-item'>Mark Late</button>
+                                          <button type='submit' name='action' value='absent' class='dropdown-item'>Mark Absent</button>
+                                        </form>
+                                      </div>
+                                    </td>
                                 </tr>";
                         }
                       } else {
-                        echo "<tr><td colspan='8' class='text-center'>No records found.</td></tr>";
+                        echo "<tr><td colspan='10' class='text-center'>No records found.</td></tr>";
                       }
                       ?>
                     </tbody>

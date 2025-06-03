@@ -37,12 +37,12 @@
             <p>Generate QR Code</p>
           </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a href="../manage-section" class="nav-link <?= $page == 'manage-section' ? 'active' : '' ?>">
             <i class="nav-icon fas fa-list"></i>
             <p>Manage Section</p>
           </a>
-        </li>
+        </li> -->
       </ul>
     </nav>
   </div>

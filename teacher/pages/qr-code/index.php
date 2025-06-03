@@ -40,9 +40,12 @@ include('../../config/dbconn.php');
                                             <select name="grade" id="grade" required class="form-control">
                                                 <option value="" selected disabled>-- Select Grade --</option>
                                                 <?php
-                                                $grades = mysqli_query($conn, "SELECT DISTINCT grade FROM tbluser ORDER BY grade ASC");
-                                                while ($g = mysqli_fetch_assoc($grades)) {
-                                                    echo "<option value='{$g['grade']}'>{$g['grade']}</option>";
+                                                $sql = "SELECT DISTINCT grade FROM tbluser";
+                                                $query_run = mysqli_query($conn, $sql);
+                                                if (mysqli_num_rows($query_run) > 0) {
+                                                    while ($row = mysqli_fetch_assoc($query_run)) {
+                                                        echo "<option value='{$row['grade']}'>{$row['grade']}</option>";
+                                                    }
                                                 }
                                                 ?>
                                             </select>
@@ -90,4 +93,3 @@ include('../../config/dbconn.php');
 
     <?php include('../../includes/scripts.php'); ?>
     <?php include('../../includes/footer.php'); ?>
-    

@@ -401,8 +401,8 @@ include('../../config/dbconn.php');
                                         <button class='btn btn-sm btn-secondary dropdown-toggle w-100' type='button' id='actionDropdown' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                           Action
                                         </button>
-                                        <form action='student_action.php' method='POST' class='dropdown-menu' aria-labelledby='actionDropdown'>
-                                          <input type='hidden' name='id' value='{$row['lrn']}'>
+                                        <form action='student_action_copy.php' method='POST' class='dropdown-menu' aria-labelledby='actionDropdown'>
+                                          <input type='hidden' name='lrn' value='{$row['lrn']}'>
                                           <button type='submit' name='action' value='present' class='dropdown-item'>Mark Present</button>
                                           <button type='submit' name='action' value='late' class='dropdown-item'>Mark Late</button>
                                           <button type='submit' name='action' value='absent' class='dropdown-item'>Mark Absent</button>

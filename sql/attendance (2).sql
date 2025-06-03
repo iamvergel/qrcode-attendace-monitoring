@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 01:14 AM
+-- Generation Time: Jun 03, 2025 at 09:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -34,13 +34,39 @@ CREATE TABLE `attendance` (
   `fname` varchar(100) DEFAULT NULL,
   `lname` varchar(100) DEFAULT NULL,
   `grade` varchar(50) DEFAULT NULL,
+  `strand` varchar(50) NOT NULL,
   `section` varchar(50) DEFAULT NULL,
   `personal_email` varchar(150) DEFAULT NULL,
   `guardian_email` varchar(150) DEFAULT NULL,
   `status` enum('Time In','Time Out') DEFAULT NULL,
   `timestamp` datetime DEFAULT current_timestamp(),
+  `attendance_status` varchar(20) DEFAULT 'Waiting for Teacher',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`id`, `lrn`, `user_id`, `fname`, `lname`, `grade`, `strand`, `section`, `personal_email`, `guardian_email`, `status`, `timestamp`, `attendance_status`, `created_at`, `updated_at`) VALUES
+(46, '213213213213', 266, 'Vergel', 'Macayan', 'Grade 11', 'dada', 'Applesss', 'vergelmacayan7@gmail.com', 'kadusalejenalyn65@gmail.com', 'Time In', '2025-06-03 21:04:00', 'absent', '2025-06-03 21:04:00', '2025-06-03 15:01:29'),
+(48, '213213213213', 266, 'Vergel', 'Macayan', 'Grade 11', 'dada', 'Applesss', 'vergelmacayan7@gmail.com', 'kadusalejenalyn65@gmail.com', 'Time Out', '2025-06-03 21:04:10', 'absent', '2025-06-02 21:04:00', '2025-06-03 15:01:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grade_section`
+--
+
+CREATE TABLE `grade_section` (
+  `id` int(11) NOT NULL,
+  `grade` varchar(50) NOT NULL,
+  `strand` varchar(50) NOT NULL,
+  `section` varchar(50) NOT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -123,6 +149,7 @@ CREATE TABLE `tbluser` (
   `fname` varchar(100) NOT NULL,
   `lname` varchar(191) NOT NULL,
   `grade` varchar(20) DEFAULT NULL,
+  `strand` varchar(50) NOT NULL,
   `section` varchar(20) DEFAULT NULL,
   `address` varchar(100) NOT NULL,
   `dob` varchar(50) NOT NULL,
@@ -140,6 +167,13 @@ CREATE TABLE `tbluser` (
   `verify_status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0=no,1=yes',
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbluser`
+--
+
+INSERT INTO `tbluser` (`id`, `lrn`, `fname`, `lname`, `grade`, `strand`, `section`, `address`, `dob`, `gender`, `phone`, `gfname`, `glname`, `gemail`, `gphone`, `email`, `image`, `password`, `role`, `verify_token`, `verify_status`, `created_at`) VALUES
+(267, '136648130635', 'Karmelo ', 'Jimenez ', 'Grade 11', 'dada', 'Applesss', '16 Acacia Street Pangarap Village Caloocan City', '03/09/2007', 'Male', '+639761561970', 'Jericho ', 'Jimenez ', 'karmelojimenez70@gmail.com', '+639456747120', 'jimenezkarmelo02@gmail.com', '', '$2y$10$3KZ0ZiU5SUTqrU9LE.Bbj.QOefHKWGRHcYnKWu8.QmN54/jktTEr2', 'student', '19d3ed8817d45fbfbdf84356a608ab50', 1, '2025-06-02 21:57:45');
 
 -- --------------------------------------------------------
 
@@ -177,6 +211,12 @@ ALTER TABLE `attendance`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `grade_section`
+--
+ALTER TABLE `grade_section`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `mail_settings`
 --
 ALTER TABLE `mail_settings`
@@ -209,7 +249,13 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT for table `grade_section`
+--
+ALTER TABLE `grade_section`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mail_settings`
@@ -233,7 +279,7 @@ ALTER TABLE `tbladmin`
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=266;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

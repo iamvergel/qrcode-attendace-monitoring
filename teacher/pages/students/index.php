@@ -361,7 +361,7 @@ include('../../config/dbconn.php');
                         <th class="export">Gender</th>
                         <th class="export">Contact</th>
                         <th class="export">Email</th>
-                        <th>Action</th>
+                        <!-- <th>Action</th> -->
                       </tr>
                     </thead>
                     <tfoot>
@@ -375,7 +375,7 @@ include('../../config/dbconn.php');
                         <th class="search">Gender</th>
                         <th class="search">Contact</th>
                         <th class="search">Email</th>
-                        <th></th>
+                        <!-- <th></th> -->
                       </tr>
                     </tfoot>
                   </table>
@@ -533,12 +533,12 @@ include('../../config/dbconn.php');
         {
           "data": "email"
         },
-        {
-          "data": 'lrn',
-          render: function (data, type, row) {
-            return '<div class="d-flex"> <a href="student_details.php?id=' + row.lrn + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a> </div>';
-          }
-        },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
+        // {
+        //   "data": 'lrn',
+        //   render: function (data, type, row) {
+        //     return '<div class="d-flex"> <a href="student_details.php?id=' + row.lrn + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a> </div>';
+        //   }
+        // },//<a href="student_details.php?id=' + data + '" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i></a>
       ],
       "initComplete": function () {
         this.api().columns().every(function () {
